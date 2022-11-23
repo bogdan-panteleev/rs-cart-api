@@ -1,13 +1,14 @@
---create extension if not exists "uuid-ossp";
+-- create extension if not exists "uuid-ossp";
 --
---create table carts (
---  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
---  created_at date not null,
---  updated_at date not null
---)
-
---create table cart_items (
---  foreign key ("cart_id") references "carts" ("id"),
---  product_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
---  items_count integer
---)
+-- create table carts (
+--   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+--   created_at date not null,
+--   updated_at date not null
+-- )
+--
+-- create table cart_items (
+--   cart_id uuid,
+--   foreign key ("cart_id") references "carts" ("id"),
+--   product_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+--   items_count integer
+-- )
