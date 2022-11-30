@@ -31,7 +31,7 @@ const serverlessConfiguration: AWS = {
   },
   functions: {
     main: {
-      handler: 'dist/src/main.handler',
+      handler: 'dist/main.handler',
       events: [
         {
           http: {
@@ -48,7 +48,19 @@ const serverlessConfiguration: AWS = {
       ],
     },
   },
-  package: { individually: true },
+  package: {
+    individually: true,
+    excludeDevDependencies: true,
+    patterns: [
+      '!src/**',
+      '!package-lock.json',
+      '!README.md',
+      '!package.json',
+      '!.idea/**',
+      '!dist/src/**',
+      '!node_modules/**',
+    ],
+  },
 };
 
 module.exports = serverlessConfiguration;
