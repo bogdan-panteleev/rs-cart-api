@@ -67,33 +67,18 @@ export class CartController {
   // // @UseGuards(BasicAuthGuard)
   @Post('checkout')
   async checkout(@Req() req: AppRequest, @Body() body: Checkout) {
-    console.log('checkout called');
-    const userId = getUserIdFromRequest(req);
-    console.log('user id is: ', userId);
-    // const cart = this.cartService.findByUserId(userId);
-    //
-    // if (!(cart && cart.items.length)) {
-    //   const statusCode = HttpStatus.BAD_REQUEST;
-    //   req.statusCode = statusCode;
-    //
-    //   return {
-    //     statusCode,
-    //     message: 'Cart is empty',
-    //   };
-    // }
-    //
-    // const { id: cartId, items } = cart;
-    // const total = calculateCartTotal(cart);
-    // const order = this.orderService.create({
-    //   ...body, // TODO: validate and pick only necessary data
-    //   userId,
-    //   cartId,
-    //   items,
-    //   total,
-    // });
-    // this.cartService.removeByUserId(userId);
-
     console.log('checkout is called with: ', body);
+
+    const userId = getUserIdFromRequest(req);
+    if (userId === null) {
+      return {
+        statusCode: HttpStatus.UNAUTHORIZED,
+        // message: 'OK',
+        data: { message: 'No auth info was provided' },
+      };
+    }
+
+    console.log('user id is: ', userId);
     try {
       const cart = await this.cartService.findByUserId(userId);
       await this.orderService.create(userId, cart.id, body);
