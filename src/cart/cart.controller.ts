@@ -1,6 +1,6 @@
 import { Controller, Get, Req, HttpStatus, Post, Body } from '@nestjs/common';
 
-import { OrderService } from '../order';
+import { Checkout, OrderService } from '../order';
 import { AppRequest, getUserIdFromRequest } from '../shared';
 
 import { calculateCartTotal } from './models-rules';
@@ -66,8 +66,10 @@ export class CartController {
   // // @UseGuards(JwtAuthGuard)
   // // @UseGuards(BasicAuthGuard)
   @Post('checkout')
-  checkout(@Req() req: AppRequest, @Body() body) {
-    // const userId = getUserIdFromRequest(req);
+  async checkout(@Req() req: AppRequest, @Body() body: Checkout) {
+    console.log('checkout called');
+    const userId = getUserIdFromRequest(req);
+    console.log('user id is: ', userId);
     // const cart = this.cartService.findByUserId(userId);
     //
     // if (!(cart && cart.items.length)) {
@@ -92,11 +94,21 @@ export class CartController {
     // this.cartService.removeByUserId(userId);
 
     console.log('checkout is called with: ', body);
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'OK',
-      data: { body },
-      // data: { order },
-    };
+    try {
+      const cart = await this.cartService.findByUserId(userId);
+      await this.orderService.create(userId, cart.id, body);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'OK',
+        data: { message: 'Created successfully' },
+      };
+    } catch (e) {
+      console.log('Failed to create order', e);
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'OK',
+        data: { message: 'Failed to create order' },
+      };
+    }
   }
 }

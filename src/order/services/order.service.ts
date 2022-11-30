@@ -1,27 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { v4 } from 'uuid';
 
 import { Order } from '../models';
+import { ProductCheckout } from '../../cart';
+import { InjectConnection } from 'nest-postgres';
+import { Client } from 'pg';
 
 @Injectable()
 export class OrderService {
-  private orders: Record<string, Order> = {}
+  constructor(
+    @InjectConnection('cartDbConnection')
+    private dbConnection: Client,
+  ) {}
+
+  private orders: Record<string, Order> = {};
 
   findById(orderId: string): Order {
-    return this.orders[ orderId ];
+    return this.orders[orderId];
   }
 
-  create(data: any) {
-    const id = v4(v4())
-    const order = {
-      ...data,
-      id,
-      status: 'inProgress',
-    };
-
-    this.orders[ id ] = order;
-
-    return order;
+  async create(userId: string, cartId: string, data: Checkout): Promise<void> {
+    try {
+      const query = `insert into orders (last_name, first_name, address, comment, cart_id) values ('${data.shipping.lastName}', '${data.shipping.firstName}', '${data.shipping.address}', '${data.shipping.comment}', '${cartId}');`;
+      console.log('create order query: ', query);
+      await this.dbConnection.query(query);
+    } catch (e) {
+      console.log('create failed', e);
+      throw new Error(`Error while creating order ${e}`);
+    }
   }
 
   update(orderId, data) {
@@ -31,9 +36,19 @@ export class OrderService {
       throw new Error('Order does not exist.');
     }
 
-    this.orders[ orderId ] = {
+    this.orders[orderId] = {
       ...data,
       id: orderId,
-    }
+    };
   }
+}
+
+export interface Checkout {
+  products: ProductCheckout[];
+  shipping: {
+    lastName: string;
+    firstName: string;
+    address: string;
+    comment: string;
+  };
 }
