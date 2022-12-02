@@ -6,8 +6,8 @@ import { AppRequest, getUserIdFromRequest } from '../shared';
 import { calculateCartTotal } from './models-rules';
 import { CartService } from './services';
 
-@Controller('api/profile/cart')
-export class CartController {
+@Controller('api/profile')
+export class ProfileController {
   constructor(
     private cartService: CartService,
     private orderService: OrderService,
@@ -15,7 +15,7 @@ export class CartController {
 
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
-  @Get()
+  @Get('cart')
   async findUserCart(@Req() req: AppRequest) {
     console.log('findUserCart is called with', req);
 
@@ -29,6 +29,28 @@ export class CartController {
       message: 'OK',
       data: { cart, total: calculateCartTotal(cart) },
     };
+  }
+
+  @Get('orders')
+  async findUserOrders(@Req() req: AppRequest) {
+    console.log('findUserOrders is called with', req);
+
+    try {
+      const orders = await this.orderService.getAllForUser(
+        getUserIdFromRequest(req),
+      );
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'OK',
+        data: { orders },
+      };
+    } catch (e) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'OK',
+        data: { message: 'Failed to get orders' },
+      };
+    }
   }
 
   // // @UseGuards(JwtAuthGuard)
@@ -65,7 +87,7 @@ export class CartController {
 
   // // @UseGuards(JwtAuthGuard)
   // // @UseGuards(BasicAuthGuard)
-  @Post('checkout')
+  @Post('cart/checkout')
   async checkout(@Req() req: AppRequest, @Body() body: Checkout) {
     console.log('checkout is called with: ', body);
 
