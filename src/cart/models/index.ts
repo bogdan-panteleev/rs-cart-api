@@ -1,17 +1,25 @@
-export type Product = {
-  id: string,
-  title: string,
-  description: string,
-  price: number,
+export type CartItem = {
+  // product: Product,
+  productId: string;
+  count: number;
 };
 
+export type Cart = {
+  id: string;
+  items: CartItem[];
+};
 
-export type CartItem = {
-  product: Product,
-  count: number,
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  count: number;
+  imageUrl: string;
 }
 
-export type Cart = {
-  id: string,
-  items: CartItem[],
+export interface ProductCheckout extends Product {
+  orderedCount: number;
+  /** orderedCount * price */
+  totalPrice: number;
 }

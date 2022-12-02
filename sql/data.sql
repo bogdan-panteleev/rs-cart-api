@@ -1,0 +1,10 @@
+--insert into carts (created_at, updated_at) values 
+--('2022-11-19', '2022-11-19'),
+--('2022-11-17', '2022-11-17')
+--;
+--
+--insert into cart_items (cart_id, items_count) values
+--('df5872f3-1af9-487f-808b-b77597f4d385', 10),
+--('df5872f3-1af9-487f-808b-b77597f4d385', 5),
+--('e732bf62-c2f7-4fc1-9c01-905ce2ab7517', 50)
+--;

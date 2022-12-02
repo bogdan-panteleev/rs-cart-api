@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "nest build --webpack",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -18,7 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "deploy": "npm run build && sls deploy"
   },
   "dependencies": {
     "@nestjs/common": "^7.5.1",
@@ -27,13 +28,23 @@
     "@nestjs/jwt": "^7.2.0",
     "@nestjs/passport": "^7.1.0",
     "@nestjs/platform-express": "^7.5.1",
+    "@serverless/typescript": "^3.21.0",
+    "@types/pg": "^8.6.5",
+    "@vendia/serverless-express": "^4.10.1",
+    "aws-lambda": "^1.0.7",
+    "esbuild": "^0.15.14",
     "helmet": "^4.2.0",
+    "nest-postgres": "^0.0.3",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.4",
+    "rxjs": "^7.5.7",
+    "serverless": "^3.24.1",
+    "serverless-dotenv-plugin": "^4.0.2",
+    "serverless-esbuild": "^1.33.1",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
